@@ -1,6 +1,6 @@
 <% layout('layouts/boilerplate')%>
 <div class="row">
-  <div class="col-6 offset-3">
+  <div class="col-6">
     <div class="card">
       <img src="<%= foundCamp.image %>" class="card-img-top" alt="..." />
       <div class="card-body">
@@ -19,6 +19,34 @@
         </form>
       </div>
     </div>
+    <h3 class="mt-3">New Review</h3>
+    <form class="mb-3 validated-form" action="/campgrounds/<%= foundCamp._id %>/reviews" method="post" novalidate>
+      <div class="mb-3">
+        <label class="form-label" for="rating">Rating</label>
+        <input class="form-range" type="range" name="review[rating]" id="rating" min="1" max="5" required>
+      </div>
+      <div class="mb-3">
+        <label class="form-label" for="body">Review</label>
+        <textarea class="form-control" name="review[body]" id="body" cols="30" rows="3" required minlength="1"></textarea>
+      </div>
+      <button class="btn btn-success">Submit!</button>
+    </form>
+  </div>
+  <div class="col-6">
+    <h2>Reviews</h2>
+    <% if(foundCamp.reviews){%>
+        <% for(let rev of foundCamp.reviews){%>
+          <div class="card mb-3">
+            <div class="card-body">
+              <h5 class="card-title">Rating: <%= rev.rating %></h5>
+              <p class="card-text"><%= rev.body %></p>
+              <form action="/campgrounds/<%= foundCamp._id %>/reviews/<%= rev._id %>?_method=DELETE" method="post">
+                <button class="btn btn-sm btn-danger"><span>&#x2716;</span></button>
+              </form>
+            </div>
+          </div>
+      <%}%>
+    <%}%> 
   </div>
 </div>
 
