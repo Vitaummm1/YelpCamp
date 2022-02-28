@@ -15,11 +15,13 @@
                 </div>
                 <div class="mb-3">
                     <label for="image" class="form-label">Image URL</label>
-                    <input type="text" name="campground[image]" id="image" class="form-control" value="<%= foundCamp.image %>">
+                    <input type="text" name="campground[image]" id="image" class="form-control" value="<%= foundCamp.image %>" required>
+                    <div class="invalid-feedback">Please, fill this field</div>
                 </div>
                 <div class="mb-3">
                     <label for="description" class="form-label">Description</label>
-                    <textarea type="text" name="campground[description]" id="description" class="form-control"><%= foundCamp.description %></textarea>
+                    <textarea type="text" name="campground[description]" id="description" class="form-control" required><%= foundCamp.description %></textarea>
+                    <div class="invalid-feedback">Please, fill this field</div>
                 </div>
                 <div class="mb-3">
                     <label for="price" class="form-label">Campground Price</label>

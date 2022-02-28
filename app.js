@@ -6,6 +6,7 @@ const Joi = require('joi');
 const path = require('path');
 const ExpressError = require('./utility/ExpressError');
 const methodOverride = require('method-override');
+const session = require('express-session');
 
 // TO REQUIRE ROUTES
 const campgrounds = require('./routes/campgrounds');
@@ -27,11 +28,24 @@ const port = 3000;
 
 app.engine('ejs', ejsMate)
 
-app.set('views', path.join(__dirname, '/views'));
+app.set('views', path.join(__dirname, '/views')); //PATH.JOIN REQUIRED TO SET THE CORRECT PATH, EVEN IF CHANGES IT DIRECTORY
 app.set('view engine', 'ejs');
 
-app.use(express.urlencoded({extended: true}));
-app.use(methodOverride('_method'));
+app.use(express.urlencoded({extended: true})); // TO USE NESTED OBJECTS (JSON)
+app.use(methodOverride('_method')); // TO USE PATCH, PUT OR DELETE REQUESTS IN FORMS
+app.use(express.static(path.join((__dirname), '/public'))); //PATH.JOIN REQUIRED TO SET THE CORRECT PATH, EVEN IF CHANGES IT DIRECTORY
+
+const sessionConfig = {
+    secret: 'thisshouldbeabettersecret',
+    resave: false,
+    saveUninitialized: true,
+    cookies: {
+        httpOnly: true,
+        expires: Date.now() + (1000 * 60 * 60 * 24 * 7),// DATE ON MILISECONDS
+        maxAge: (1000 * 60 * 60 * 24 * 7) 
+    }
+}
+app.use(session(sessionConfig));
 
 // TO USE ROUTES
 app.use('/campgrounds', campgrounds)
