@@ -7,6 +7,7 @@ const path = require('path');
 const ExpressError = require('./utility/ExpressError');
 const methodOverride = require('method-override');
 const session = require('express-session');
+const flash = require('connect-flash')
 
 // TO REQUIRE ROUTES
 const campgrounds = require('./routes/campgrounds');
@@ -46,6 +47,14 @@ const sessionConfig = {
     }
 }
 app.use(session(sessionConfig));
+
+app.use(flash()) // TO USE FLASH
+
+app.use((req, res, next) => {
+    res.locals.success = req.flash('success');
+    res.locals.error = req.flash('error')
+    next();
+})
 
 // TO USE ROUTES
 app.use('/campgrounds', campgrounds)
