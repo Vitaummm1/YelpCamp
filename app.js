@@ -15,6 +15,7 @@ const User = require('./models/user')
 // TO REQUIRE ROUTES
 const campgrounds = require('./routes/campgrounds');
 const reviews = require('./routes/reviews')
+const user = require('./routes/user')
 
 // TO CONNECT TO MONGODB
 mongoose.connect('mongodb://localhost:27017/yelp-camp', {useNewUrlParser: true, useUnifiedTopology: true})
@@ -69,6 +70,7 @@ passport.deserializeUser(User.deserializeUser()); // TO REMOVE USER FROM SESSION
 // TO USE ROUTES
 app.use('/campgrounds', campgrounds)
 app.use('/campgrounds/:id/reviews', reviews)
+app.use('/', user)
 
 // OLD VERSION - BEFORE ROUTES > GO TO ROUTES/CAMPGROUNDS
 // const validateCampground = (req,res,next) =>{    
