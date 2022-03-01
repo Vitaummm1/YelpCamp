@@ -17,17 +17,28 @@ const validateReview = (req,res,next) => { // TO AVOID REGISTERING OUTSIDE CLIEN
     }
 }
 
+const isAuthorReview = async (req,res,next) =>{
+    const {id, reviewId} = req.params;
+    const review = await Review.findById(reviewId)
+    if (!review.author.equals(req.user._id)){
+        req.flash('error', 'You dont have access to that');
+        res.redirect(`/campgrounds/${id}`)
+    }
+    next();
+}
+
 router.post('/', isLoggedIn, validateReview, catchAsync(async (req,res) => {
     const {id} = req.params;
     const campground = await Campground.findById(id);
     const review = new Review(req.body.review);
     campground.reviews.push(review);
+    review.author = req.user._id
     await review.save();
     await campground.save();
     res.redirect(`/campgrounds/${campground._id}`);
 }))
 
-router.delete('/:reviewId', isLoggedIn, catchAsync(async (req,res) =>{
+router.delete('/:reviewId', isLoggedIn, isAuthorReview, catchAsync(async (req,res) =>{
     const {id, reviewId} = req.params;
     await Campground.findByIdAndUpdate(id, {$pull: {reviews: reviewId}});
     await Review.findByIdAndDelete(reviewId);
