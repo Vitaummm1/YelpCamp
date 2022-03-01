@@ -7,7 +7,10 @@ const path = require('path');
 const ExpressError = require('./utility/ExpressError');
 const methodOverride = require('method-override');
 const session = require('express-session');
-const flash = require('connect-flash')
+const flash = require('connect-flash');
+const passport = require('passport');
+const LocalStrategy = require('passport-local');
+const User = require('./models/user')
 
 // TO REQUIRE ROUTES
 const campgrounds = require('./routes/campgrounds');
@@ -50,12 +53,18 @@ const sessionConfig = {
 app.use(session(sessionConfig));
 
 app.use(flash()) // TO USE FLASH
-
-app.use((req, res, next) => {
+app.use((req, res, next) => { // FLASH AS MIDDLEWARE
     res.locals.success = req.flash('success');
     res.locals.error = req.flash('error')
     next();
 })
+
+app.use(passport.initialize()); // NEED TO INITIALIZE PASSPORT IN EXPRESS APPS
+app.use(passport.session()); // NEED TO INITIALIZE A SESSION; HAVE TO BE BEFORE SESSION
+passport.use(new LocalStrategy(User.authenticate())); // USE THE AUTHENTICATE METHOD PROVIDED BY PASSPORT
+passport.serializeUser(User.serializeUser()); // TO STORE USER ON SESSION
+passport.deserializeUser(User.deserializeUser()); // TO REMOVE USER FROM SESSION
+
 
 // TO USE ROUTES
 app.use('/campgrounds', campgrounds)
