@@ -32,10 +32,11 @@ app.engine('ejs', ejsMate)
 app.set('views', path.join(__dirname, '/views')); //PATH.JOIN REQUIRED TO SET THE CORRECT PATH, EVEN IF CHANGES IT DIRECTORY
 app.set('view engine', 'ejs');
 
-app.use(express.urlencoded({extended: true})); // TO USE NESTED OBJECTS (JSON)
+app.use(express.urlencoded({extended: true})); // TO USE PARSE THE REQ BODY INTO OBJECTS (JSON)
 app.use(methodOverride('_method')); // TO USE PATCH, PUT OR DELETE REQUESTS IN FORMS
 app.use(express.static(path.join((__dirname), '/public'))); //PATH.JOIN REQUIRED TO SET THE CORRECT PATH, EVEN IF CHANGES IT DIRECTORY
 
+// TO USE AND CONFIG SESSION
 const sessionConfig = {
     secret: 'thisshouldbeabettersecret',
     resave: false,

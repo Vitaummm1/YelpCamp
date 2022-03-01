@@ -41,7 +41,7 @@
               <h5 class="card-title">Rating: <%= rev.rating %></h5>
               <p class="card-text"><%= rev.body %></p>
               <form action="/campgrounds/<%= foundCamp._id %>/reviews/<%= rev._id %>?_method=DELETE" method="post">
-                <button class="btn btn-sm btn-danger"><span>&#x2716;</span></button>
+                <button class="btn btn-sm btn-danger"><span>&times;</span></button>
               </form>
             </div>
           </div>

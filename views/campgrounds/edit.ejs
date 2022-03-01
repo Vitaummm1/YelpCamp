@@ -2,7 +2,7 @@
     <div class="row">
         <h1 class="text-center">Edit <%= foundCamp.title %></h1>
         <div class="col-6 offset-3">
-            <form action="/campgrounds" method="post" class="validated-form" novalidate>
+            <form action="/campgrounds/<%= foundCamp._id %>?_method=PATCH" method="post" class="validated-form" novalidate>
                 <div class="mb-3">
                     <label for="title" class="form-label">Title</label>
                     <input type="text" name="campground[title]" id="title" class="form-control" value="<%= foundCamp.title %>" required>
