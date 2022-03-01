@@ -53,19 +53,19 @@ const sessionConfig = {
 }
 app.use(session(sessionConfig));
 
-app.use(flash()) // TO USE FLASH
-app.use((req, res, next) => { // FLASH AS MIDDLEWARE
-    res.locals.success = req.flash('success');
-    res.locals.error = req.flash('error')
-    next();
-})
-
 app.use(passport.initialize()); // NEED TO INITIALIZE PASSPORT IN EXPRESS APPS
 app.use(passport.session()); // NEED TO INITIALIZE A SESSION; HAVE TO BE BEFORE SESSION
 passport.use(new LocalStrategy(User.authenticate())); // USE THE AUTHENTICATE METHOD PROVIDED BY PASSPORT
 passport.serializeUser(User.serializeUser()); // TO STORE USER ON SESSION
 passport.deserializeUser(User.deserializeUser()); // TO REMOVE USER FROM SESSION
 
+app.use(flash()) // TO USE FLASH
+app.use((req, res, next) => { // GLOBAL THINGS
+    res.locals.currentUser = req.user; // TO PROVIDE USER GLOBALLY TO EJS VIEWS (HAVE TO BE AFTER PASSPORT MIDDLEWARES)
+    res.locals.success = req.flash('success'); // GLOBAL FLASH SUCCESS
+    res.locals.error = req.flash('error') // GLOBAL FLASH ERROR
+    next();
+})
 
 // TO USE ROUTES
 app.use('/campgrounds', campgrounds)
