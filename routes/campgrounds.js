@@ -5,7 +5,7 @@ const ExpressError = require('../utility/ExpressError');
 const Campground = require('../models/campground');
 const {campgroundSchema} = require('../schemas')
 
-const validateCampground = (req,res,next) =>{    
+const validateCampground = (req,res,next) =>{ // TO AVOID REGISTERING OUTSIDE CLIENT WINDOW  
     const {error} = campgroundSchema.validate(req.body);
     if(error){
         const msg = error.details.map(el => el.message).join(', ');

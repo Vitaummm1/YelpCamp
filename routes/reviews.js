@@ -6,7 +6,7 @@ const Campground = require('../models/campground');
 const Review = require('../models/review');
 const {reviewSchema} = require('../schemas')
 
-const validateReview = (req,res,next) => {
+const validateReview = (req,res,next) => { // TO AVOID REGISTERING OUTSIDE CLIENT WINDOW
     const {error} = reviewSchema.validate(req.body);
     if(error){
         const msg = error.details.map(el => el.message).join(', ')
