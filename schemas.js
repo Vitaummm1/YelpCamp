@@ -17,7 +17,7 @@ module.exports.reviewSchema = Joi.object({
     }).required()
 });
 
-module.exports.reviewSchema = Joi.object({
+module.exports.userSchema = Joi.object({
     user: Joi.object({
         username: Joi.string().required().min(1),
         password: Joi.string().required().min(8),
