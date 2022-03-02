@@ -1,4 +1,7 @@
 <% layout('layouts/boilerplate')%>
+<link rel="stylesheet" href="/stylesheets/stars.css">
+<link rel="stylesheet" href="/stylesheets/overflow.css">
+
 <div class="row">
   <div class="col-6">
     <div class="card">
@@ -22,11 +25,24 @@
       </div>
       <% } %> 
     </div>
-    <h3 class="mt-3">New Review</h3>
+  </div>
+  <div class="col-6">
+    <h3>Leave a Review</h3>
     <form class="mb-3 validated-form" action="/campgrounds/<%= foundCamp._id %>/reviews" method="post" novalidate>
-      <div class="mb-3">
-        <label class="form-label" for="rating">Rating</label>
-        <input class="form-range" type="range" name="review[rating]" id="rating" min="1" max="5" required>
+      <div>
+        <fieldset class="starability-basic">
+          <input type="radio" id="no-rate" class="input-no-rate" name="review[rating]" value="0" aria-label="No rating." />
+          <input type="radio" id="first-rate1" name="review[rating]" value="1" />
+          <label for="first-rate1" title="Terrible">1 star</label>
+          <input type="radio" id="first-rate2" name="review[rating]" value="2" />
+          <label for="first-rate2" title="Not good">2 stars</label>
+          <input type="radio" id="first-rate3" name="review[rating]" value="3" checked/>
+          <label for="first-rate3" title="Average">3 stars</label>
+          <input type="radio" id="first-rate4" name="review[rating]" value="4" />
+          <label for="first-rate4" title="Very good">4 stars</label>
+          <input type="radio" id="first-rate5" name="review[rating]" value="5" />
+          <label for="first-rate5" title="Amazing">5 stars</label>
+        </fieldset>
       </div>
       <div class="mb-3">
         <label class="form-label" for="body">Review</label>
@@ -34,26 +50,27 @@
       </div>
       <button class="btn btn-success">Submit!</button>
     </form>
-  </div>
-  <div class="col-6">
-    <h2>Reviews</h2>
-    <% if(foundCamp.reviews){%>
-        <% for(let rev of foundCamp.reviews){%>
-          <div class="card mb-3">
-            <div class="card-body">
-              <h5 class="card-title">Comment by <strong><%= rev.author.username %></strong></h5>
-              <p class="card-text">Rating: <%= rev.rating %></p>
-              <p class="card-text"><%= rev.body %></p>
-              <% if(currentUser && rev.author.equals(currentUser._id)){ %>
-              <form action="/campgrounds/<%= foundCamp._id %>/reviews/<%= rev._id %>?_method=DELETE" method="post">
-                <button class="btn btn-sm btn-danger"><span>&times;</span></button>
-              </form>
-              <% } %> 
+      <% if(foundCamp.reviews){%>
+        <div class="divReviews">
+          <h2>Reviews</h2>
+          <% for(let rev of foundCamp.reviews){%>
+            <div class="card m-3 ">
+              <div class="card-body">
+                <h5 class="card-title">Comment by <strong><%= rev.author.username %></strong></h5>
+                <p class="starability-result" data-rating="<%= rev.rating %>">
+                  Rated: <%= rev.rating %> stars</p>
+                <p class="card-text"><%= rev.body %></p>
+                <% if(currentUser && rev.author.equals(currentUser._id)){ %>
+                <form action="/campgrounds/<%= foundCamp._id %>/reviews/<%= rev._id %>?_method=DELETE" method="post">
+                  <button class="btn btn-sm btn-danger"><span>&times;</span></button>
+                </form>
+                <% } %> 
+              </div>
             </div>
-          </div>
-      <%}%>
-    <%}%> 
-  </div>
+        <%}%>
+      </div>
+      <%}%> 
+    </div>
 </div>
 
 

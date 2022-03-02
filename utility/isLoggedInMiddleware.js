@@ -1,7 +1,7 @@
-module.exports = func = (req,res,next) => {
+module.exports = function (req,res,next){
     if(!req.isAuthenticated()){
         req.flash('error', 'Need to be Logged In');
-        res.redirect('/login');
+        return res.redirect('/login');
     }
     next();
 }
