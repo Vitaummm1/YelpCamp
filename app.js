@@ -1,3 +1,7 @@
+if(process.env.NODE_ENV !== 'production') {
+    require('dotenv').config();
+}
+
 // ALL REQUIRED LIB
 const express = require('express');
 const mongoose = require('mongoose');

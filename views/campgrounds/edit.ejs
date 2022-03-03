@@ -1,8 +1,9 @@
-<% layout('layouts/boilerplate')%> 
+<% layout('layouts/boilerplate')%>
+<link rel="stylesheet" href="/stylesheets/thumbnails.css"> 
     <div class="row">
         <h1 class="text-center">Edit <%= foundCamp.title %></h1>
         <div class="col-6 offset-3">
-            <form action="/campgrounds/<%= foundCamp._id %>?_method=PATCH" method="post" class="validated-form" novalidate>
+            <form action="/campgrounds/<%= foundCamp._id %>?_method=PATCH" method="post" class="validated-form" novalidate enctype="multipart/form-data"> <!--ENCTYPE NEEDED TO VALIDATE IMAGES AT SCHEMA/CAMPGROUNDS-->
                 <div class="mb-3">
                     <label for="title" class="form-label">Title</label>
                     <input type="text" name="campground[title]" id="title" class="form-control" value="<%= foundCamp.title %>" required>
@@ -13,11 +14,11 @@
                     <input type="text" name="campground[location]" id="location" class="form-control" value="<%= foundCamp.location %>" required>
                     <div class="invalid-feedback">Please, fill this field</div>
                 </div>
-                <div class="mb-3">
+                <!-- <div class="mb-3">
                     <label for="image" class="form-label">Image URL</label>
                     <input type="text" name="campground[image]" id="image" class="form-control" value="<%= foundCamp.image %>" required>
                     <div class="invalid-feedback">Please, fill this field</div>
-                </div>
+                </div> -->
                 <div class="mb-3">
                     <label for="description" class="form-label">Description</label>
                     <textarea type="text" name="campground[description]" id="description" class="form-control" required><%= foundCamp.description %></textarea>
@@ -31,10 +32,26 @@
                         <div class="invalid-feedback">Please, fill this field</div>
                     </div>
                 </div>
-                <div class="mb-3">
-                <button class="btn btn-info col-md-4">Edit</button>
+                <div class="input-group mb-3">
+                    <input type="file" class="input-control" name="images" id="image" multiple>
+                </div>
+                <div class="mb-3 row">
+                    <% foundCamp.images.forEach(function(img, i) { %>
+                    <div class="col-md-4">
+                        <div class="form-check-inline">
+                            <input type="checkbox" name="deleteImages[]" id="image-<%= i %>" value="<%= img.filename %>">
+                        </div>
+                        <label for="img-<%= i %>">Delete?</label>
+                        <br> 
+                        <img src="<%- img.url %>" class="img-thumbnail" alt="">
+                    </div>
+                    <% }) %> 
+                </div>
+            <div class="mb-3">
+                <button class="btn btn-info col-md-4 offset-4">Update</button>
             </div>
-            <a href="/campgrounds/<%= foundCamp._id %>">Return</a>
+            </form>
+            <a href="/campgrounds/<%= foundCamp._id %>" class="btn btn-warning col-md-2 offset-5">Back</a>
         </div>
 
     </div>

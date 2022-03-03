@@ -2,7 +2,7 @@
 <div class="row">
     <h1 class="text-center">New Campground</h1>
     <div class="col-6 offset-3">
-        <form action="/campgrounds" method="post" class="validated-form" novalidate>
+        <form action="/campgrounds" method="post" class="validated-form" novalidate enctype="multipart/form-data">
             <div class="mb-3">
                 <label for="title" class="form-label">Title</label>
                 <input type="text" name="campground[title]" id="title" class="form-control" required>
@@ -13,11 +13,10 @@
                 <input type="text" name="campground[location]" id="location" class="form-control" required>
                 <div class="invalid-feedback">Please, fill this field</div>
             </div>
-            <div class="mb-3">
-                <label for="image" class="form-label">Image URL</label>
+            <!-- <div class="mb-3">
                 <input type="text" name="campground[image]" id="image" class="form-control" required>
                 <div class="invalid-feedback">Please, fill this field</div>
-            </div>
+            </div> -->
             <div class="mb-3">
                 <label for="description" class="form-label">Description</label>
                 <textarea type="text" name="campground[description]" id="description" class="form-control" required></textarea>
@@ -30,6 +29,9 @@
                     <input type="number" name="campground[price]" id="price" class="form-control" placeholder="0.00" aria-describedby="price-label" step="0.01" min="0" required>
                     <div class="invalid-feedback">Please, fill this field</div>
                 </div>
+            </div>
+            <div class="input-group mb-3">
+                <input type="file" class="form-control" name="images" id="image" multiple>
             </div>
             <div class="mb-3">
             <button class="btn btn-success">Add</button>
