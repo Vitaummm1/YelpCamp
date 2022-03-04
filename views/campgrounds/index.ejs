@@ -1,6 +1,9 @@
     <% layout('layouts/boilerplate')%> 
     <div class="col-xl-4 mb-3">
         <h1>All Campgrounds</h1>
+        <% if(currentUser) {%> 
+        <a href="/campgrounds/new" class="btn btn-success">Add Campground</a>
+        <% } %> 
     </div>
     <ul>
         <%for(let campground of campgrounds) {%>
