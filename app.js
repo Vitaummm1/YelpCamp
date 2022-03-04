@@ -17,17 +17,18 @@ const LocalStrategy = require('passport-local');
 const User = require('./models/user');
 const mongoSanitize = require('express-mongo-sanitize');
 const MongoStore = require('connect-mongo');
+const helmet = require('helmet');
 
 
 // TO REQUIRE ROUTES
 const campgrounds = require('./routes/campgrounds');
-const reviews = require('./routes/reviews')
-const user = require('./routes/user')
+const reviews = require('./routes/reviews');
+const user = require('./routes/user');
 
 // TO CONNECT TO MONGODB
 const dbUrl = process.env.DB_URL;
-mongoose.connect('mongodb://localhost:27017/yelp-camp', {useNewUrlParser: true, useUnifiedTopology: true})
-// mongoose.connect(dbUrl, {useNewUrlParser: true, useUnifiedTopology: true})
+// mongoose.connect('mongodb://localhost:27017/yelp-camp', {useNewUrlParser: true, useUnifiedTopology: true})
+mongoose.connect(dbUrl, {useNewUrlParser: true, useUnifiedTopology: true})
     .then(
     () => {
         console.log('Mongo connected!');
@@ -54,20 +55,22 @@ app.use(
     }),
   );
 
+const secret = process.env.SECRET;
+
   const store = MongoStore.create({
-      mongoUrl: 'mongodb://localhost:27017/yelp-camp',
-      secret: 'thisshouldbeabettersecret',
+      mongoUrl: dbUrl,
+      secret: secret,
       touchAfter: 24*60*60
   });
 
   store.on('errors', function(e){
       console.log('SESSION STORE ERROR', e)
-  })
+  });
 
 // TO USE AND CONFIG SESSION
 const sessionConfig = {
     store: store,
-    secret: 'thisshouldbeabettersecret',
+    secret: secret,
     resave: false,
     saveUninitialized: true,
     cookies: {
@@ -76,6 +79,7 @@ const sessionConfig = {
         maxAge: (1000 * 60 * 60 * 24 * 7) 
     }
 }
+
 app.use(session(sessionConfig));
 
 app.use(passport.initialize()); // NEED TO INITIALIZE PASSPORT IN EXPRESS APPS
@@ -91,6 +95,57 @@ app.use((req, res, next) => { // GLOBAL THINGS
     res.locals.error = req.flash('error') // GLOBAL FLASH ERROR
     next();
 })
+
+const scriptSrcUrls = [
+    "https://stackpath.bootstrapcdn.com/",
+    "https://api.tiles.mapbox.com/",
+    "https://api.mapbox.com/",
+    "https://kit.fontawesome.com/",
+    "https://cdnjs.cloudflare.com/",
+    "https://cdn.jsdelivr.net/",
+    "https://res.cloudinary.com/dv5vm4sqh/"
+];
+const styleSrcUrls = [
+    "https://kit-free.fontawesome.com/",
+    "https://stackpath.bootstrapcdn.com/",
+    "https://api.mapbox.com/",
+    "https://api.tiles.mapbox.com/",
+    "https://fonts.googleapis.com/",
+    "https://use.fontawesome.com/",
+    "https://cdn.jsdelivr.net/",
+    "https://res.cloudinary.com/dv5vm4sqh/"
+];
+const connectSrcUrls = [
+    "https://*.tiles.mapbox.com",
+    "https://api.mapbox.com",
+    "https://events.mapbox.com",
+    "https://res.cloudinary.com/dv5vm4sqh/"
+];
+const fontSrcUrls = [ "https://res.cloudinary.com/dv5vm4sqh/" ];
+ 
+app.use(
+    helmet.contentSecurityPolicy({
+        directives : {
+            defaultSrc : [],
+            connectSrc : [ "'self'", ...connectSrcUrls ],
+            scriptSrc  : [ "'unsafe-inline'", "'self'", ...scriptSrcUrls ],
+            styleSrc   : [ "'self'", "'unsafe-inline'", ...styleSrcUrls ],
+            workerSrc  : [ "'self'", "blob:" ],
+            objectSrc  : [],
+            imgSrc     : [
+                "'self'",
+                "blob:",
+                "data:",
+                "https://res.cloudinary.com/",
+                "https://images.unsplash.com/",
+                "https://source.unsplash.com/"
+            ],
+            fontSrc    : [ "'self'", ...fontSrcUrls ],
+            mediaSrc   : [ "https://res.cloudinary.com/dv5vm4sqh/" ],
+            childSrc   : [ "blob:" ]
+        }
+    })
+);
 
 // TO USE ROUTES
 app.use('/campgrounds', campgrounds)
