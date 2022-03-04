@@ -39,7 +39,7 @@ mongoose.connect(dbUrl, {useNewUrlParser: true, useUnifiedTopology: true})
 
 const app = express();
 
-const port = 3000;
+const port = process.env.PORT || 3000;
 
 app.engine('ejs', ejsMate)
 
@@ -248,6 +248,6 @@ app.use((err, req, res, next) => {
 })
 
 app.listen(port, () =>{
-    console.log('Server Running')
+    console.log('Server Running on', port)
 })
 
