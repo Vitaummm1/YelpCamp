@@ -1,8 +1,9 @@
 <% layout('layouts/boilerplate')%>
 <link rel="stylesheet" href="/stylesheets/thumbnails.css"> 
     <div class="row">
+        <div class="card col-6 offset-3 p-5 text-black">
         <h1 class="text-center">Edit <%= foundCamp.title %></h1>
-        <div class="col-6 offset-3">
+        <div class="">
             <form action="/campgrounds/<%= foundCamp._id %>?_method=PATCH" method="post" class="validated-form" novalidate enctype="multipart/form-data"> <!--ENCTYPE NEEDED TO VALIDATE IMAGES AT SCHEMA/CAMPGROUNDS-->
                 <div class="mb-3">
                     <label for="title" class="form-label">Title</label>
@@ -48,10 +49,10 @@
                     <% }) %> 
                 </div>
             <div class="mb-3">
-                <button class="btn btn-info col-md-4 offset-4">Update</button>
+                <button class="btn btn-info col-4">Update</button>
             </div>
             </form>
-            <a href="/campgrounds/<%= foundCamp._id %>" class="btn btn-warning col-md-2 offset-5">Back</a>
+            <a href="/campgrounds/<%= foundCamp._id %>" class="btn btn-warning">Back</a>
         </div>
-
+    </div>
     </div>

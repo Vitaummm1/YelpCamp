@@ -14,7 +14,10 @@ const session = require('express-session');
 const flash = require('connect-flash');
 const passport = require('passport');
 const LocalStrategy = require('passport-local');
-const User = require('./models/user')
+const User = require('./models/user');
+const mongoSanitize = require('express-mongo-sanitize');
+const MongoStore = require('connect-mongo');
+
 
 // TO REQUIRE ROUTES
 const campgrounds = require('./routes/campgrounds');
@@ -22,7 +25,9 @@ const reviews = require('./routes/reviews')
 const user = require('./routes/user')
 
 // TO CONNECT TO MONGODB
+const dbUrl = process.env.DB_URL;
 mongoose.connect('mongodb://localhost:27017/yelp-camp', {useNewUrlParser: true, useUnifiedTopology: true})
+// mongoose.connect(dbUrl, {useNewUrlParser: true, useUnifiedTopology: true})
     .then(
     () => {
         console.log('Mongo connected!');
@@ -43,9 +48,25 @@ app.set('view engine', 'ejs');
 app.use(express.urlencoded({extended: true})); // TO USE PARSE THE REQ BODY INTO OBJECTS (JSON)
 app.use(methodOverride('_method')); // TO USE PATCH, PUT OR DELETE REQUESTS IN FORMS
 app.use(express.static(path.join((__dirname), '/public'))); //PATH.JOIN REQUIRED TO SET THE CORRECT PATH, EVEN IF CHANGES IT DIRECTORY
+app.use(
+    mongoSanitize({
+      replaceWith: '_',
+    }),
+  );
+
+  const store = MongoStore.create({
+      mongoUrl: 'mongodb://localhost:27017/yelp-camp',
+      secret: 'thisshouldbeabettersecret',
+      touchAfter: 24*60*60
+  });
+
+  store.on('errors', function(e){
+      console.log('SESSION STORE ERROR', e)
+  })
 
 // TO USE AND CONFIG SESSION
 const sessionConfig = {
+    store: store,
     secret: 'thisshouldbeabettersecret',
     resave: false,
     saveUninitialized: true,
